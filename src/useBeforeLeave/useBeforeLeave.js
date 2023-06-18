@@ -1,6 +1,4 @@
-import { React, useEffect, useRef, useState } from "react";
-
-const useBeforeLeave = (onBefore) => {
+export const useBeforeLeave = (onBefore) => {
   const handle = (event) => {
     const { clientY } = event;
     if (clientY <= 0) {
@@ -13,15 +11,3 @@ const useBeforeLeave = (onBefore) => {
     return () => document.removeEventListener("mouseleave", handle);
   }, []);
 };
-
-function App() {
-  const begForLife = () => console.log("Pls dont leave");
-  useBeforeLeave(begForLife);
-  return (
-    <div className="App">
-      <h1>Hello</h1>
-    </div>
-  );
-}
-
-export default App;
