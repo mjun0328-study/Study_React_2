@@ -1,7 +1,4 @@
-import { elementType } from "prop-types";
-import { React, useEffect, useRef, useState } from "react";
-
-const useNotification = (title, options) => {
+export const useNotification = (title, options) => {
   if (!("Notification" in window)) return;
   const fireNotif = () => {
     if (Notification.permission !== "granted") {
@@ -18,16 +15,3 @@ const useNotification = (title, options) => {
   };
   return fireNotif;
 };
-
-function App() {
-  const triggerNotf = useNotification("Can I steal your kimchi?", {
-    body: "I love kimchi dont you",
-  });
-  return (
-    <div className="App">
-      <button onClick={triggerNotf}>Hello</button>
-    </div>
-  );
-}
-
-export default App;
