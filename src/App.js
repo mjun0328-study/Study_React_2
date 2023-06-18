@@ -1,31 +1,16 @@
 import { elementType } from "prop-types";
 import { React, useEffect, useRef, useState } from "react";
-
-const useNotification = (title, options) => {
-  if (!("Notification" in window)) return;
-  const fireNotif = () => {
-    if (Notification.permission !== "granted") {
-      Notification.requestPermission().then((permission) => {
-        if (permission === "granted") {
-          new Notification(title, options);
-        } else {
-          return;
-        }
-      });
-    } else {
-      new Notification(title, options);
-    }
-  };
-  return fireNotif;
-};
+import useAxios from "./useAxios/useAxios";
 
 function App() {
-  const triggerNotf = useNotification("Can I steal your kimchi?", {
-    body: "I love kimchi dont you",
+  const { loading, data, error, refetch } = useAxios({
+    url: "https://yts.mx/api/v2/list_movies.json",
   });
   return (
     <div className="App">
-      <button onClick={triggerNotf}>Hello</button>
+      <h1>{data && data.status}</h1>
+      <h2>{loading && "Loading"}</h2>
+      <button onClick={refetch}>Refetch</button>
     </div>
   );
 }
