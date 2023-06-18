@@ -1,33 +1,37 @@
+import { elementType } from "prop-types";
 import { React, useEffect, useRef, useState } from "react";
 
-const useNetwork = (onChange) => {
-  const [status, setStatus] = useState(navigator.onLine);
-  const handleChange = () => {
-    if (typeof onChange === "function") {
-      onChange(navigator.onLine);
+const useFullscreen = (onFullS) => {
+  const element = useRef();
+  const triggerFull = () => {
+    if (element.current) {
+      element.current.requestFullscreen();
+      if (onFullS && typeof onFullS === "function") {
+        onFullS(true);
+      }
     }
-    setStatus(navigator.onLine);
   };
-
-  useEffect(() => {
-    window.addEventListener("online", handleChange);
-    window.addEventListener("offline", handleChange);
-    return () => {
-      window.removeEventListener("online", handleChange);
-      window.removeEventListener("offline", handleChange);
-    };
-  }, []);
-  return status;
+  const exitFull = () => {
+    document.exitFullscreen();
+    if (onFullS && typeof onFullS === "function") {
+      onFullS(false);
+    }
+  };
+  return { element, triggerFull, exitFull };
 };
 
 function App() {
-  const handleNetworkChange = (online) => {
-    console.log(online ? "We just went online" : "We are offline");
+  const onFullS = (isFull) => {
+    console.log(isFull ? "We are full" : "We are samll");
   };
-  const online = useNetwork(handleNetworkChange);
+  const { element, triggerFull, exitFull } = useFullscreen(onFullS);
   return (
-    <div className="App">
-      <h1>{online ? "Online" : "Offline"}</h1>
+    <div className="App" style={{ height: "1000vh" }}>
+      <div ref={element}>
+        <img src="https://i.ibb.co/R6RwNxx/grape.jpg" alt="grape" width="250" />
+        <button onClick={exitFull}>Exit fullscreen</button>
+      </div>
+      <button onClick={triggerFull}>Make fullscreen</button>
     </div>
   );
 }
